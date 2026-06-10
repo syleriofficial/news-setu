@@ -130,7 +130,6 @@ const translations = {
     newsSetuBrief: 'NewsSetu Brief',
     fullStoryAccess: 'Full story access',
     fullStoryText: 'NewsSetu shows the complete available RSS brief, AI context, key facts, and attribution here. The full publisher article opens on the original source for copyright-safe reading.',
-    readFullOn: 'Read full story on',
     whatHappened: 'What happened',
     whyItMatters: 'Why it matters',
     keyFacts: 'Key facts',
@@ -188,7 +187,6 @@ const translations = {
     newsSetuBrief: 'NewsSetu ब्रीफ',
     fullStoryAccess: 'पूरी खबर',
     fullStoryText: 'NewsSetu यहां उपलब्ध RSS ब्रीफ, एआई संदर्भ, मुख्य तथ्य और स्रोत दिखाता है। पूरी पब्लिशर रिपोर्ट मूल स्रोत पर खुलेगी।',
-    readFullOn: 'पूरी खबर पढ़ें',
     whatHappened: 'क्या हुआ',
     whyItMatters: 'क्यों ज़रूरी है',
     keyFacts: 'मुख्य तथ्य',
@@ -246,7 +244,6 @@ const translations = {
     newsSetuBrief: 'ملخص NewsSetu',
     fullStoryAccess: 'الوصول للقصة كاملة',
     fullStoryText: 'يعرض NewsSetu ملخص RSS المتاح والسياق والحقائق والإسناد. يفتح المقال الكامل على موقع الناشر الأصلي.',
-    readFullOn: 'اقرأ القصة كاملة على',
     whatHappened: 'ماذا حدث',
     whyItMatters: 'لماذا يهم',
     keyFacts: 'حقائق رئيسية',
@@ -304,7 +301,6 @@ const translations = {
     newsSetuBrief: 'Resumen NewsSetu',
     fullStoryAccess: 'Historia completa',
     fullStoryText: 'NewsSetu muestra el resumen RSS disponible, contexto, datos clave y atribucion. La historia completa abre en la fuente original.',
-    readFullOn: 'Leer historia completa en',
     whatHappened: 'Que paso',
     whyItMatters: 'Por que importa',
     keyFacts: 'Datos clave',
@@ -1073,9 +1069,6 @@ function ArticleModal({ article, articles, copy, onClose, savedIds, toggleSave }
             <h3>{copy.fullStoryAccess}</h3>
             <p>{copy.fullStoryText}</p>
           </div>
-          <a href={article.link} target="_blank" rel="noreferrer">
-            {copy.readFullOn} {article.source} <ExternalLink size={16} />
-          </a>
         </div>
         <div className="infoGrid">
           <div>

@@ -806,10 +806,6 @@ button {
 }
 
 .fullStoryPanel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
-  align-items: center;
   margin: 18px 0;
   padding: 18px;
   border: 1px solid #dbeafe;
@@ -826,19 +822,6 @@ button {
   margin: 0;
   color: #475569;
   line-height: 1.55;
-}
-
-.fullStoryPanel a {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border-radius: 8px;
-  background: var(--blue);
-  color: #fff;
-  padding: 11px 13px;
-  font-weight: 950;
-  text-decoration: none;
-  white-space: nowrap;
 }
 
 .infoGrid {
@@ -1271,16 +1254,6 @@ button {
   .monetizationHero {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .fullStoryPanel {
-    grid-template-columns: 1fr;
-  }
-
-  .fullStoryPanel a {
-    justify-content: center;
-    width: 100%;
-    white-space: normal;
   }
 
   .leadCard {
