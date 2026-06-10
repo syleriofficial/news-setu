@@ -297,6 +297,7 @@ function App() {
       {selected && (
         <ArticleModal
           article={selected}
+          articles={articles}
           language={language}
           onClose={() => setSelected(null)}
           savedIds={savedIds}
@@ -705,8 +706,13 @@ function Newsletter() {
   );
 }
 
-function ArticleModal({ article, language, onClose, savedIds, toggleSave, viewMode, setViewMode }) {
+function ArticleModal({ article, articles, language, onClose, savedIds, toggleSave, viewMode, setViewMode }) {
   const facts = buildKeyFacts(article);
+  const timeline = buildTimeline(article);
+  const faqs = buildFaq(article);
+  const related = articles
+    .filter((item) => item.id !== article.id && (item.category === article.category || item.source === article.source))
+    .slice(0, 4);
   return (
     <div className="modalOverlay" onClick={onClose}>
       <article className="articleModal" onClick={(event) => event.stopPropagation()}>
@@ -758,6 +764,43 @@ function ArticleModal({ article, language, onClose, savedIds, toggleSave, viewMo
             </ul>
           </div>
         </div>
+        <div className="explainerGrid">
+          <section className="timelinePanel">
+            <h3>Timeline</h3>
+            {timeline.map((item) => (
+              <div className="timelineItem" key={item.label}>
+                <b>{item.label}</b>
+                <span>{item.text}</span>
+              </div>
+            ))}
+          </section>
+          <section className="backgroundPanel">
+            <h3>Background</h3>
+            <p>{buildBackground(article)}</p>
+          </section>
+        </div>
+        <section className="faqPanel">
+          <h3>Quick FAQ</h3>
+          {faqs.map((item) => (
+            <details key={item.q}>
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))}
+        </section>
+        {related.length > 0 && (
+          <section className="relatedPanel">
+            <h3>Related stories</h3>
+            <div>
+              {related.map((item) => (
+                <a key={item.id} href={item.link} target="_blank" rel="noreferrer">
+                  <span>{item.source}</span>
+                  <b>{item.title}</b>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
         <div className="sourceBox">
           <h3>Source attribution</h3>
           <p>
@@ -1105,6 +1148,45 @@ function buildKeyFacts(article) {
     `Source: ${article.source || 'RSS publisher'}`,
     `Published: ${formatDate(article.pubDate)}`,
     `Category: ${article.category || 'top'}`,
+  ];
+}
+
+function buildTimeline(article) {
+  return [
+    {
+      label: 'Published',
+      text: `${article.source || 'The publisher'} published this update at ${formatDate(article.pubDate)}.`,
+    },
+    {
+      label: 'Now',
+      text: 'NewsSetu is tracking the live RSS update and summarizing the available brief.',
+    },
+    {
+      label: 'Next',
+      text: 'Open the original publisher link for the latest full report, corrections, images, and live updates.',
+    },
+  ];
+}
+
+function buildBackground(article) {
+  const category = article.category === 'local' ? 'local public-interest' : article.category || 'news';
+  return `This is a ${category} story from ${article.source || 'a verified RSS source'}. NewsSetu adds context, key facts, and a safe path to the original report so readers can understand the story quickly without losing source attribution.`;
+}
+
+function buildFaq(article) {
+  return [
+    {
+      q: 'Is this the full publisher article?',
+      a: 'NewsSetu shows the full available RSS brief and context. The complete publisher article opens through the original source link.',
+    },
+    {
+      q: 'Why not copy the full article here?',
+      a: 'Copying full publisher articles without a license can create copyright and monetization problems. NewsSetu keeps attribution clear and links readers to the source.',
+    },
+    {
+      q: 'Can I read this in another language?',
+      a: 'Use the Original / translated toggle. A server-side AI translation endpoint can be connected for production translation quality.',
+    },
   ];
 }
 
