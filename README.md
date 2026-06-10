@@ -14,7 +14,9 @@ Production-oriented Netlify + Supabase AI news platform.
 - Original / translated reading toggle UI
 - Article detail modal with AI summary, what happened, why it matters, key facts, source attribution, and read-original link
 - Admin dashboard for RSS sources, AdSense slots, newsletter, analytics, SEO, and languages
+- Affiliate link manager structure with visible disclosure
 - SEO basics: meta tags, Open Graph tags, `robots.txt`, and `sitemap.xml`
+- Policy pages: privacy, terms, and affiliate disclosure
 - AdSense placeholders only, with no fake ad scripts
 - Mobile bottom navigation and readable article view
 
@@ -55,6 +57,13 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## Monetization notes
+
+- Add AdSense publisher scripts only after approval.
+- Keep paid placements labeled and separate from editorial RSS stories.
+- Use `public/privacy.html`, `public/terms.html`, and `public/affiliate-disclosure.html` for review readiness.
+- Store approved partner links in `public.affiliate_links` and keep `enabled=false` until reviewed.
 
 ## Deploy
 

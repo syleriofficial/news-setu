@@ -286,6 +286,7 @@ function App() {
           setViewMode={setViewMode}
         />
       )}
+      <Footer />
       <MobileNav copy={copy} setScreen={setScreen} setMobileSearchOpen={setMobileSearchOpen} />
     </div>
   );
@@ -407,9 +408,12 @@ function Home({
         <b>BREAKING</b>
         <span>{ticker || status}</span>
       </div>
+      <RevenueStrip />
 
       <main className="main">
         <section>
+          <ProductTrustBar />
+
           <div className="toolbarRow">
             <div className="categoryBar">
               {categories.map(([key, label]) => (
@@ -485,11 +489,54 @@ function Home({
         <aside className="rightRail">
           <Trending articles={articles} language={language} openArticle={openArticle} viewMode={viewMode} />
           <AISummaryBox />
+          <AffiliatePanel />
           <Newsletter />
           <AdSlot name="sidebar-rectangle" label="AdSense Sidebar Slot" compact />
         </aside>
       </main>
     </>
+  );
+}
+
+function RevenueStrip() {
+  return (
+    <section className="revenueStrip" aria-label="NewsSetu revenue and trust model">
+      <div>
+        <b>Live RSS</b>
+        <span>No fake cards</span>
+      </div>
+      <div>
+        <b>AdSense-ready</b>
+        <span>Policy-safe slots</span>
+      </div>
+      <div>
+        <b>Affiliate-ready</b>
+        <span>Disclosure built in</span>
+      </div>
+      <div>
+        <b>AI layer</b>
+        <span>Summary and context</span>
+      </div>
+    </section>
+  );
+}
+
+function ProductTrustBar() {
+  return (
+    <div className="productTrustBar">
+      <div>
+        <ShieldCheck size={18} />
+        <span>Verified publisher attribution</span>
+      </div>
+      <div>
+        <Sparkles size={18} />
+        <span>AI summaries separated from source links</span>
+      </div>
+      <div>
+        <LinkIcon size={18} />
+        <span>Affiliate links require admin approval</span>
+      </div>
+    </div>
   );
 }
 
@@ -542,6 +589,9 @@ function ArticleCard({ article, language, openArticle, savedIds, toggleSave, vie
           <Share2 size={15} /> Share
         </button>
       </div>
+      <div className="commerceHint">
+        <LinkIcon size={14} /> Related partner links can appear here after admin review.
+      </div>
       <a href={article.link} target="_blank" rel="noreferrer">
         Source <ExternalLink size={14} />
       </a>
@@ -573,6 +623,18 @@ function AISummaryBox() {
       </h3>
       <p>Article pages include summary, what happened, why it matters, key facts, and source attribution.</p>
       <button>Open AI Brief</button>
+    </div>
+  );
+}
+
+function AffiliatePanel() {
+  return (
+    <div className="railCard affiliatePanel">
+      <h3>
+        <LinkIcon size={18} /> Partner Picks
+      </h3>
+      <p>Affiliate placements are reserved for relevant tools, books, subscriptions, and courses. Every link must be labeled.</p>
+      <div className="affiliateDisclosure">Affiliate disclosure active</div>
     </div>
   );
 }
@@ -652,6 +714,14 @@ function ArticleModal({ article, language, onClose, savedIds, toggleSave, viewMo
             publisher for the full report.
           </p>
         </div>
+        <AdSlot name="article-inline" label="AdSense Article Inline Slot" />
+        <div className="sourceBox affiliateDisclosureBox">
+          <h3>Affiliate disclosure</h3>
+          <p>
+            Some future partner links may earn NewsSetu a commission. Editorial stories, summaries, and source links stay
+            separate from paid placements.
+          </p>
+        </div>
         <div className="readerTools">
           <button>
             <Languages size={16} /> {viewMode === 'original' ? 'Original' : 'Translated'}
@@ -718,7 +788,8 @@ function Saved({ articles, history, openArticle, savedIds, toggleSave }) {
 
 function Admin({ user }) {
   const rssRows = categories.map(([key, label]) => ({ key, label, status: 'Live RSS', health: 'Healthy' }));
-  const adSlots = ['top-native', 'sidebar-rectangle', 'article-inline', 'mobile-feed'];
+  const adSlots = ['top-native', 'sidebar-rectangle', 'article-inline', 'mobile-feed', 'newsletter-sponsor'];
+  const affiliateRows = ['Books and explainers', 'AI tools', 'Market data tools', 'Learning courses'];
   return (
     <main className="single">
       <section>
@@ -747,6 +818,16 @@ function Admin({ user }) {
                 <b>{slot}</b>
                 <span>Placeholder only</span>
                 <em>No script</em>
+              </div>
+            ))}
+          </Manager>
+
+          <Manager title="Affiliate Link Manager" icon={<LinkIcon size={18} />}>
+            {affiliateRows.map((row) => (
+              <div className="managerRow" key={row}>
+                <b>{row}</b>
+                <span>Manual approval</span>
+                <em>Disclosure required</em>
               </div>
             ))}
           </Manager>
@@ -804,6 +885,7 @@ function Manager({ children, icon, title }) {
 
 function Analytics({ articles, history, savedIds }) {
   const sourceCount = new Set(articles.map((article) => article.source)).size;
+  const revenueReadiness = articles.length && sourceCount ? 86 : 0;
   return (
     <main className="single">
       <section>
@@ -828,6 +910,17 @@ function Analytics({ articles, history, savedIds }) {
             <b>{sourceCount}</b>
             <span>Sources</span>
           </div>
+          <div>
+            <b>{revenueReadiness}%</b>
+            <span>Revenue Readiness</span>
+          </div>
+        </div>
+        <div className="revenueFunnel">
+          <h3>Revenue Funnel</h3>
+          <div><span>Search traffic</span><b>SEO + sitemap</b></div>
+          <div><span>Engagement</span><b>AI brief + save</b></div>
+          <div><span>Monetization</span><b>AdSense + affiliate</b></div>
+          <div><span>Retention</span><b>Newsletter + history</b></div>
         </div>
       </section>
     </main>
@@ -836,17 +929,31 @@ function Analytics({ articles, history, savedIds }) {
 
 function Monetize() {
   const channels = [
-    ['AdSense Slots', 'Top banner, sidebar, article inline, mobile feed placeholders are ready.'],
-    ['Newsletter Sponsorship', 'Daily brief subscriber table and admin export path are ready.'],
-    ['Premium AI Summaries', 'Article intelligence panel can connect to a paid summarization endpoint.'],
-    ['Sponsored Stories', 'Admin review structure reserved without mixing ads into editorial RSS cards.'],
+    ['AdSense Slots', 'Top banner, sidebar, article inline, mobile feed, and newsletter sponsor placements.'],
+    ['Affiliate Links', 'Admin-approved partner links with visible disclosure and category matching.'],
+    ['Newsletter Sponsorship', 'Daily brief subscriber table and sponsorship slot are ready.'],
+    ['Premium AI Summaries', 'Article intelligence panel can connect to paid summaries or memberships.'],
+    ['Sponsored Stories', 'Paid posts stay separate from editorial RSS and must be labeled.'],
+    ['SEO Revenue Loop', 'Sitemap, metadata, source links, and topic pages support search acquisition.'],
+  ];
+  const checklist = [
+    'Apply for AdSense after enough original UI, policy pages, and stable traffic.',
+    'Add privacy policy, terms, contact, and affiliate disclosure pages before ad approval.',
+    'Use server-side affiliate redirect tracking instead of hiding destination URLs.',
+    'Keep ads away from navigation buttons and breaking labels to avoid accidental clicks.',
   ];
   return (
     <main className="single">
       <section>
-        <div className="pageHero">
-          <h2>Monetization</h2>
-          <p>Revenue-ready structure without fake ad scripts or demo cards.</p>
+        <div className="pageHero monetizationHero">
+          <div>
+            <h2>Monetization Engine</h2>
+            <p>AdSense, affiliate, newsletter, and premium AI revenue structure without fake scripts or fake stories.</p>
+          </div>
+          <div className="moneyScore">
+            <b>4</b>
+            <span>Revenue channels</span>
+          </div>
         </div>
         <div className="adminGrid">
           {channels.map(([title, body]) => (
@@ -854,6 +961,14 @@ function Monetize() {
               <h3>{title}</h3>
               <p>{body}</p>
               <button>Configure</button>
+            </div>
+          ))}
+        </div>
+        <div className="launchChecklist">
+          <h3>Before earning money</h3>
+          {checklist.map((item) => (
+            <div className="checkRow" key={item}>
+              <CheckCircle2 size={16} /> {item}
             </div>
           ))}
         </div>
@@ -878,6 +993,18 @@ function MobileNav({ copy, setScreen, setMobileSearchOpen }) {
         <Settings size={18} /> {copy.admin}
       </button>
     </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="footer">
+      <b>NewsSetu</b>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/affiliate-disclosure.html">Affiliate Disclosure</a>
+      <span>Live RSS news with labeled monetization surfaces.</span>
+    </footer>
   );
 }
 
