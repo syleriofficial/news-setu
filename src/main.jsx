@@ -128,8 +128,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    loadNews(category, location.country, location.region);
-  }, [category, location.country, location.region]);
+    loadNews(category, location.country, location.region, location.city);
+  }, [category, location.country, location.region, location.city]);
 
   useEffect(() => {
     if (!supabase) return undefined;
@@ -141,15 +141,20 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  async function loadNews(cat = 'local', country = location.country, region = location.region) {
+  async function loadNews(cat = 'local', country = location.country, region = location.region, city = location.city) {
     setStatus('Loading live RSS news...');
     try {
+      const cityParam = city ? `&city=${encodeURIComponent(city)}` : '';
       const regionParam = region ? `&region=${encodeURIComponent(region)}` : '';
-      const res = await fetch(`/api/news?category=${encodeURIComponent(cat)}&country=${encodeURIComponent(country)}${regionParam}`);
+      const res = await fetch(`/api/news?category=${encodeURIComponent(cat)}&country=${encodeURIComponent(country)}${regionParam}${cityParam}`);
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'News fetch failed');
       setArticles(data.articles || []);
-      const place = data.region ? `${data.region}, ${countryLabel(data.country)}` : countryLabel(data.country);
+      const place = data.city
+        ? `${data.city}, ${data.region ? `${data.region}, ` : ''}${countryLabel(data.country)}`
+        : data.region
+          ? `${data.region}, ${countryLabel(data.country)}`
+          : countryLabel(data.country);
       setStatus(`${data.total} live articles for ${place}`);
     } catch (error) {
       setStatus(`Live API error: ${error.message}`);
@@ -158,7 +163,7 @@ function App() {
 
   async function searchNews(event) {
     event?.preventDefault();
-    if (!query.trim()) return loadNews(category, location.country, location.region);
+    if (!query.trim()) return loadNews(category, location.country, location.region, location.city);
     setStatus('Searching live RSS news...');
     try {
       const res = await fetch(
@@ -601,7 +606,17 @@ function LocationBanner({ location, setLocation, status }) {
     setLocation({
       ...location,
       region,
-      label: region ? `${region}, ${countryLabel(location.country)}` : countryLabel(location.country),
+      label: placeLabel({ ...location, region }),
+      source: 'manual',
+    });
+  }
+
+  function changeCity(event) {
+    const city = event.target.value;
+    setLocation({
+      ...location,
+      city,
+      label: placeLabel({ ...location, city }),
       source: 'manual',
     });
   }
@@ -626,6 +641,12 @@ function LocationBanner({ location, setLocation, status }) {
           onChange={changeRegion}
           placeholder="State / region"
           aria-label="Set state or region for local news"
+        />
+        <input
+          value={location.city || ''}
+          onChange={changeCity}
+          placeholder="City / area"
+          aria-label="Set city or nearby area for local news"
         />
         <button onClick={() => detectAccurateLocation(setLocation)}>Use my location</button>
       </div>
@@ -1292,14 +1313,17 @@ function formatLocation(data) {
   const country = normalizeCountry(data.country);
   const region = data.region || '';
   const city = data.city || '';
-  const locality = city || region;
   return {
     country,
     region,
     city,
-    label: locality ? `${locality}, ${countryLabel(country)}` : countryLabel(country),
+    label: placeLabel({ country, region, city }),
     source: data.source || 'ip',
   };
+}
+
+function placeLabel({ country, region = '', city = '' }) {
+  return [city, region, countryLabel(country)].filter(Boolean).join(', ');
 }
 
 function locationSourceLabel(source) {
