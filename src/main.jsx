@@ -1209,7 +1209,7 @@ function detectLocaleCountry() {
 
 async function detectAccurateLocation(setLocation) {
   try {
-    const res = await fetch('/api/location');
+    const res = await fetch('/.netlify/functions/location');
     const data = await res.json();
     if (data.ok) {
       setLocation(formatLocation(data));
@@ -1223,7 +1223,7 @@ async function detectAccurateLocation(setLocation) {
     async (position) => {
       try {
         const res = await fetch(
-          `/api/location?lat=${encodeURIComponent(position.coords.latitude)}&lon=${encodeURIComponent(position.coords.longitude)}`,
+          `/.netlify/functions/location?lat=${encodeURIComponent(position.coords.latitude)}&lon=${encodeURIComponent(position.coords.longitude)}`,
         );
         const data = await res.json();
         if (data.ok) {
