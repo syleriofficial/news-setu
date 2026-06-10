@@ -115,6 +115,7 @@ export const handler = async (event) => {
           country,
           countryName: countryLabel(country),
           city: geo.city || geo.locality || '',
+          region: geo.principalSubdivision || '',
           source: 'gps',
         }),
       };

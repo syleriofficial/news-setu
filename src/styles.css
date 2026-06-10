@@ -319,6 +319,7 @@ button {
 }
 
 .locationControls select,
+.locationControls input,
 .locationControls button {
   min-height: 36px;
   border: 1px solid #bfdbfe;
@@ -327,6 +328,10 @@ button {
   color: #1e3a8a;
   padding: 7px 10px;
   font-weight: 900;
+}
+
+.locationControls input {
+  min-width: 150px;
 }
 
 .locationControls button {
@@ -1230,6 +1235,7 @@ button {
   }
 
   .locationControls select,
+  .locationControls input,
   .locationControls button {
     width: 100%;
   }

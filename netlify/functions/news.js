@@ -162,14 +162,20 @@ function countryLabel(country = 'IN') {
   }
 }
 
-function googleNewsUrl({ category, country, q }) {
-  const region = normalizeCountry(country);
-  const params = `hl=en-${region}&gl=${region}&ceid=${region}:en`;
+function cleanRegion(region = '') {
+  return region.replace(/[^\p{L}\p{N}\s.'-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 80);
+}
+
+function googleNewsUrl({ category, country, q, region }) {
+  const countryCode = normalizeCountry(country);
+  const stateRegion = cleanRegion(region);
+  const params = `hl=en-${countryCode}&gl=${countryCode}&ceid=${countryCode}:en`;
   if (q) {
     return `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&${params}`;
   }
   if (category === 'local') {
-    return `https://news.google.com/rss/search?q=${encodeURIComponent(countryLabel(region))}&${params}`;
+    const localQuery = stateRegion ? `${stateRegion} ${countryLabel(countryCode)}` : countryLabel(countryCode);
+    return `https://news.google.com/rss/search?q=${encodeURIComponent(localQuery)}&${params}`;
   }
   if (TOPICS[category]) {
     return `https://news.google.com/rss/headlines/section/topic/${TOPICS[category]}?${params}`;
@@ -185,8 +191,9 @@ export const handler = async (event) => {
   try {
     const category = (event.queryStringParameters?.category || 'local').toLowerCase();
     const country = normalizeCountry(event.queryStringParameters?.country || 'IN');
+    const region = cleanRegion(event.queryStringParameters?.region || '');
     const q = (event.queryStringParameters?.q || '').trim();
-    const url = googleNewsUrl({ category, country, q });
+    const url = googleNewsUrl({ category, country, q, region });
     const xml = await fetchText(url);
     const articles = parse(xml, category, country);
 
@@ -198,6 +205,7 @@ export const handler = async (event) => {
         category,
         country,
         countryName: countryLabel(country),
+        region: region || null,
         query: q || null,
         total: articles.length,
         sourceType: 'live-rss',
