@@ -14,17 +14,22 @@ const COUNTRY_NAMES = {
   AE: 'United Arab Emirates',
   AU: 'Australia',
   BD: 'Bangladesh',
+  BR: 'Brazil',
   CA: 'Canada',
   DE: 'Germany',
   ES: 'Spain',
   FR: 'France',
   GB: 'United Kingdom',
   IN: 'India',
+  IT: 'Italy',
   JP: 'Japan',
   KR: 'South Korea',
+  NL: 'Netherlands',
   PK: 'Pakistan',
   RU: 'Russia',
+  SG: 'Singapore',
   US: 'United States',
+  ZA: 'South Africa',
 };
 
 const headers = {

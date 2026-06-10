@@ -51,17 +51,22 @@ const countryNames = {
   AE: 'United Arab Emirates',
   AU: 'Australia',
   BD: 'Bangladesh',
+  BR: 'Brazil',
   CA: 'Canada',
   DE: 'Germany',
   ES: 'Spain',
   FR: 'France',
   GB: 'United Kingdom',
   IN: 'India',
+  IT: 'Italy',
   JP: 'Japan',
   KR: 'South Korea',
+  NL: 'Netherlands',
   PK: 'Pakistan',
   RU: 'Russia',
+  SG: 'Singapore',
   US: 'United States',
+  ZA: 'South Africa',
 };
 
 const languages = [
@@ -111,7 +116,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    detectBrowserLocation(setLocation);
+    detectAccurateLocation(setLocation);
   }, []);
 
   useEffect(() => {
@@ -575,7 +580,7 @@ function LocationBanner({ location, status }) {
         <Globe2 size={18} />
         <b>Local news for {location.label}</b>
       </div>
-      <span>{location.source === 'gps' ? 'Detected from browser location' : 'Detected from browser region'} · {status}</span>
+      <span>{locationSourceLabel(location.source)} · {status}</span>
     </div>
   );
 }
@@ -1202,17 +1207,52 @@ function detectLocaleCountry() {
   };
 }
 
-function detectBrowserLocation(setLocation) {
+async function detectAccurateLocation(setLocation) {
+  try {
+    const res = await fetch('/api/location');
+    const data = await res.json();
+    if (data.ok) {
+      setLocation(formatLocation(data));
+    }
+  } catch {
+    // Locale fallback remains active when the location API is unavailable.
+  }
+
   if (!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const country = inferCountryFromCoordinates(position.coords.latitude, position.coords.longitude);
-      if (!country) return;
-      setLocation({ country, label: countryNames[country] || country, source: 'gps' });
+    async (position) => {
+      try {
+        const res = await fetch(
+          `/api/location?lat=${encodeURIComponent(position.coords.latitude)}&lon=${encodeURIComponent(position.coords.longitude)}`,
+        );
+        const data = await res.json();
+        if (data.ok) {
+          setLocation(formatLocation(data));
+        }
+      } catch {
+        // Keep the IP-based or locale-based country.
+      }
     },
     () => {},
     { enableHighAccuracy: false, maximumAge: 1000 * 60 * 60 * 12, timeout: 4500 },
   );
+}
+
+function formatLocation(data) {
+  const country = normalizeCountry(data.country);
+  const city = data.city ? `${data.city}, ` : '';
+  return {
+    country,
+    label: `${city}${countryNames[country] || country}`,
+    source: data.source || 'ip',
+  };
+}
+
+function locationSourceLabel(source) {
+  if (source === 'gps') return 'Detected from browser GPS';
+  if (source === 'ip') return 'Detected from network location';
+  if (source === 'fallback') return 'Using default location';
+  return 'Detected from browser region';
 }
 
 function normalizeCountry(country) {
@@ -1229,25 +1269,16 @@ function inferCountryFromTimezone(timeZone = '') {
   if (timeZone.includes('Berlin')) return 'DE';
   if (timeZone.includes('Paris')) return 'FR';
   if (timeZone.includes('Madrid')) return 'ES';
+  if (timeZone.includes('Rome')) return 'IT';
+  if (timeZone.includes('Amsterdam')) return 'NL';
+  if (timeZone.includes('Singapore')) return 'SG';
+  if (timeZone.includes('Sao_Paulo')) return 'BR';
+  if (timeZone.includes('Johannesburg')) return 'ZA';
   if (timeZone.includes('Tokyo')) return 'JP';
   if (timeZone.includes('Seoul')) return 'KR';
   if (timeZone.includes('Moscow')) return 'RU';
   if (timeZone.includes('New_York') || timeZone.includes('Chicago') || timeZone.includes('Los_Angeles')) return 'US';
   return 'IN';
-}
-
-function inferCountryFromCoordinates(latitude, longitude) {
-  if (latitude >= 6 && latitude <= 37 && longitude >= 68 && longitude <= 98) return 'IN';
-  if (latitude >= 24 && latitude <= 50 && longitude >= -125 && longitude <= -66) return 'US';
-  if (latitude >= 49 && latitude <= 61 && longitude >= -8 && longitude <= 2) return 'GB';
-  if (latitude >= 42 && latitude <= 84 && longitude >= -141 && longitude <= -52) return 'CA';
-  if (latitude >= -44 && latitude <= -10 && longitude >= 112 && longitude <= 154) return 'AU';
-  if (latitude >= 23 && latitude <= 27 && longitude >= 51 && longitude <= 57) return 'AE';
-  if (latitude >= 20 && latitude <= 27 && longitude >= 88 && longitude <= 93) return 'BD';
-  if (latitude >= 23 && latitude <= 37 && longitude >= 60 && longitude <= 78) return 'PK';
-  if (latitude >= 30 && latitude <= 46 && longitude >= 129 && longitude <= 146) return 'JP';
-  if (latitude >= 33 && latitude <= 39 && longitude >= 124 && longitude <= 132) return 'KR';
-  return null;
 }
 
 function formatDate(value) {
