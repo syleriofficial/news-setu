@@ -119,7 +119,7 @@ function parse(xml, category, country) {
       const summary = buildSummary(description || title);
       const fullBrief = clean(description || title);
       return {
-        id: `${country}-${category}-${index}-${Buffer.from(`${title}${link}`).toString('base64url').slice(0, 16)}`,
+        id: `${country}-${category}-${Buffer.from(`${title}${link}`).toString('base64url').slice(0, 24)}`,
         title,
         link,
         source,

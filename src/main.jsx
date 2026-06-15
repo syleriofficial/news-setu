@@ -141,6 +141,7 @@ const translations = {
     savedArticlesTitle: 'Saved Articles',
     savedArticlesIntro: 'Your read-later library and reading history sync with Supabase when login is enabled.',
     emptySaved: 'No saved articles from the current feed yet.',
+    emptyFeed: 'No live stories loaded yet. Try another category, language, or location.',
     readingHistory: 'Reading History',
     noHistory: 'No reading history yet.',
     categories: {
@@ -198,6 +199,7 @@ const translations = {
     savedArticlesTitle: 'सेव की गई खबरें',
     savedArticlesIntro: 'आपकी रीड-लेटर लाइब्रेरी और रीडिंग हिस्ट्री लॉगिन होने पर Supabase से सिंक होती है।',
     emptySaved: 'इस फीड से अभी कोई सेव खबर नहीं है।',
+    emptyFeed: 'अभी लाइव खबरें लोड नहीं हुईं। दूसरी कैटेगरी, भाषा या लोकेशन आज़माएं।',
     readingHistory: 'रीडिंग हिस्ट्री',
     noHistory: 'अभी कोई रीडिंग हिस्ट्री नहीं है।',
     categories: {
@@ -255,6 +257,7 @@ const translations = {
     savedArticlesTitle: 'الأخبار المحفوظة',
     savedArticlesIntro: 'مكتبة القراءة لاحقا وسجل القراءة تتزامن مع Supabase عند تسجيل الدخول.',
     emptySaved: 'لا توجد أخبار محفوظة من هذا الموجز بعد.',
+    emptyFeed: 'لم يتم تحميل أخبار مباشرة بعد. جرب فئة أو لغة أو موقعا آخر.',
     readingHistory: 'سجل القراءة',
     noHistory: 'لا يوجد سجل قراءة بعد.',
     categories: {
@@ -312,6 +315,7 @@ const translations = {
     savedArticlesTitle: 'Noticias guardadas',
     savedArticlesIntro: 'Tu biblioteca para leer despues y el historial se sincronizan con Supabase al iniciar sesion.',
     emptySaved: 'Aun no hay noticias guardadas de este feed.',
+    emptyFeed: 'Aun no se cargaron noticias en vivo. Prueba otra categoria, idioma o ubicacion.',
     readingHistory: 'Historial de lectura',
     noHistory: 'Aun no hay historial de lectura.',
     categories: {
@@ -462,6 +466,9 @@ function App() {
       }
       const linkedArticle = articles.find((article) => article.id === articleId);
       if (linkedArticle) setSelected(linkedArticle);
+      else if (articles.length > 0) {
+        setStatus('Shared story is no longer in the live feed. Showing the latest stories for this context.');
+      }
     }
 
     syncArticleFromUrl();
@@ -892,6 +899,7 @@ function Home({
                 toggleSave={toggleSave}
               />
             ))}
+            {articles.length === 0 && <div className="empty">{copy.emptyFeed}</div>}
           </div>
         </section>
 
@@ -1723,7 +1731,11 @@ function readLocal(key, fallback, legacyKey = '') {
 }
 
 function writeLocal(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Keep the app usable when storage is blocked or full.
+  }
 }
 
 function setMeta(selector, attribute, value) {
