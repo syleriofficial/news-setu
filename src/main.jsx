@@ -355,6 +355,11 @@ function readUrlParam(name) {
   return new URLSearchParams(window.location.search).get(name);
 }
 
+function readArticleIdFromUrl() {
+  const [, articleId] = window.location.pathname.match(/^\/article\/([^/]+)\/?$/) || [];
+  return articleId ? decodeURIComponent(articleId) : readUrlParam('article');
+}
+
 function initialCategory() {
   const urlCategory = readUrlParam('category');
   return categories.some(([key]) => key === urlCategory) ? urlCategory : 'local';
@@ -383,7 +388,8 @@ function initialLocation() {
 
 function contextUrl({ category, location, language }) {
   const url = new URL(window.location.href);
-  const currentArticle = url.searchParams.get('article');
+  const currentArticle = readArticleIdFromUrl();
+  url.pathname = '/';
   url.searchParams.set('category', category);
   url.searchParams.set('country', location.country);
   url.searchParams.set('language', language.code);
@@ -391,7 +397,22 @@ function contextUrl({ category, location, language }) {
   else url.searchParams.delete('region');
   if (location.city) url.searchParams.set('city', location.city);
   else url.searchParams.delete('city');
-  if (currentArticle) url.searchParams.set('article', currentArticle);
+  if (currentArticle) url.pathname = `/article/${encodeURIComponent(currentArticle)}`;
+  url.searchParams.delete('article');
+  return url;
+}
+
+function homeContextUrl({ category, location, language }) {
+  const url = contextUrl({ category, location, language });
+  url.pathname = '/';
+  url.searchParams.delete('article');
+  return url;
+}
+
+function articleContextUrl(article, context) {
+  const url = contextUrl(context);
+  url.pathname = `/article/${encodeURIComponent(article.id)}`;
+  url.searchParams.delete('article');
   return url;
 }
 
@@ -434,7 +455,7 @@ function App() {
 
   useEffect(() => {
     function syncArticleFromUrl() {
-      const articleId = readUrlParam('article');
+      const articleId = readArticleIdFromUrl();
       if (!articleId) {
         setSelected(null);
         return;
@@ -457,6 +478,10 @@ function App() {
     });
     return () => listener.subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    updatePageSeo(selected, { category, location, language });
+  }, [selected, category, location.country, location.region, location.city, language.code]);
 
   async function loadNews(
     cat = 'local',
@@ -584,15 +609,13 @@ function App() {
   }
 
   function pushArticleUrl(article) {
-    const url = contextUrl({ category, location, language });
-    url.searchParams.set('article', article.id);
+    const url = articleContextUrl(article, { category, location, language });
     window.history.pushState({}, '', url);
   }
 
   function closeArticle() {
     setSelected(null);
-    const url = new URL(window.location.href);
-    url.searchParams.delete('article');
+    const url = homeContextUrl({ category, location, language });
     window.history.replaceState({}, '', url);
   }
 
@@ -1704,9 +1727,79 @@ function writeLocal(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function setMeta(selector, attribute, value) {
+  let element = document.head.querySelector(selector);
+  if (!element) {
+    element = document.createElement('meta');
+    if (selector.includes('property=')) {
+      element.setAttribute('property', selector.match(/property="([^"]+)"/)?.[1] || '');
+    } else {
+      element.setAttribute('name', selector.match(/name="([^"]+)"/)?.[1] || '');
+    }
+    document.head.appendChild(element);
+  }
+  element.setAttribute(attribute, value);
+}
+
+function setCanonical(url) {
+  let canonical = document.head.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.setAttribute('rel', 'canonical');
+    document.head.appendChild(canonical);
+  }
+  canonical.setAttribute('href', url);
+}
+
+function setJsonLd(article, url) {
+  const existing = document.getElementById('newssetu-jsonld');
+  if (existing) existing.remove();
+  if (!article) return;
+
+  const script = document.createElement('script');
+  script.id = 'newssetu-jsonld';
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: displayTitle(article),
+    description: displaySummary(article),
+    datePublished: article.pubDate || undefined,
+    dateModified: article.pubDate || undefined,
+    mainEntityOfPage: url,
+    publisher: {
+      '@type': 'Organization',
+      name: 'NewsSetu',
+      url: 'https://newssetu.netlify.app/',
+    },
+    isBasedOn: article.link,
+    citation: article.source,
+  });
+  document.head.appendChild(script);
+}
+
+function updatePageSeo(article, context) {
+  const url = article ? articleContextUrl(article, context) : homeContextUrl(context);
+  const title = article ? `${displayTitle(article)} | NewsSetu` : 'NewsSetu - Trusted News, Simplified';
+  const description = article
+    ? displaySummary(article)
+    : 'NewsSetu is an AI-powered multilingual news platform with trusted sources, summaries, saved articles and global news coverage.';
+
+  document.title = title;
+  setCanonical(url.toString());
+  setMeta('meta[name="description"]', 'content', description);
+  setMeta('meta[property="og:url"]', 'content', url.toString());
+  setMeta('meta[property="og:title"]', 'content', title);
+  setMeta('meta[property="og:description"]', 'content', description);
+  setMeta('meta[name="twitter:title"]', 'content', title);
+  setMeta('meta[name="twitter:description"]', 'content', description);
+  setJsonLd(article, url.toString());
+}
+
 async function shareArticle(article) {
   const url = new URL(window.location.href);
-  url.searchParams.set('article', article.id);
+  url.pathname = `/article/${encodeURIComponent(article.id)}`;
+  url.searchParams.delete('article');
   const shareUrl = url.toString();
   if (navigator.share) {
     await navigator.share({ title: article.title, url: shareUrl });

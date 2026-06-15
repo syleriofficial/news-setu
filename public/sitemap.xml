@@ -11,6 +11,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://newssetu.netlify.app/?category=top</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://newssetu.netlify.app/?category=world</loc>
     <changefreq>hourly</changefreq>
     <priority>0.8</priority>
@@ -22,6 +27,26 @@
   </url>
   <url>
     <loc>https://newssetu.netlify.app/?category=tech</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://newssetu.netlify.app/?category=sports</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://newssetu.netlify.app/?category=entertainment</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://newssetu.netlify.app/?category=health</loc>
+    <changefreq>hourly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://newssetu.netlify.app/?category=science</loc>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
   </url>
