@@ -666,6 +666,7 @@ function App() {
           copy={copy}
           language={language}
           onClose={closeArticle}
+          openArticle={openArticle}
           savedIds={savedIds}
           toggleSave={toggleSave}
         />
@@ -1035,9 +1036,9 @@ function ArticleCard({ article, copy, openArticle, savedIds, toggleSave }) {
           <Share2 size={15} /> Share
         </button>
       </div>
-      <a href={article.link} target="_blank" rel="noreferrer">
-        {copy.source} <ExternalLink size={14} />
-      </a>
+      <button className="sourceAction" onClick={() => openArticle(article)}>
+        {copy.readStory} <ChevronRight size={14} />
+      </button>
     </article>
   );
 }
@@ -1109,7 +1110,7 @@ function Newsletter({ copy }) {
   );
 }
 
-function ArticleModal({ article, articles, copy, onClose, savedIds, toggleSave }) {
+function ArticleModal({ article, articles, copy, onClose, openArticle, savedIds, toggleSave }) {
   const facts = buildKeyFacts(article);
   const timeline = buildTimeline(article);
   const faqs = buildFaq(article);
@@ -1189,10 +1190,10 @@ function ArticleModal({ article, articles, copy, onClose, savedIds, toggleSave }
             <h3>{copy.relatedStories}</h3>
             <div>
               {related.map((item) => (
-                <a key={item.id} href={item.link} target="_blank" rel="noreferrer">
+                <button key={item.id} onClick={() => openArticle(item)}>
                   <span>{item.source}</span>
                   <b>{item.title}</b>
-                </a>
+                </button>
               ))}
             </div>
           </section>

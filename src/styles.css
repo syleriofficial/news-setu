@@ -636,7 +636,7 @@ button {
 
 .cardTop span,
 .trustRow span,
-.articleCard a,
+.sourceAction,
 .original {
   display: inline-flex;
   align-items: center;
@@ -660,11 +660,14 @@ button {
   color: var(--green);
 }
 
-.articleCard a,
+.sourceAction,
 .original {
+  border: 0;
+  background: transparent;
   color: var(--blue);
   font-weight: 950;
   text-decoration: none;
+  padding: 0;
 }
 
 .railCard {
@@ -899,7 +902,7 @@ button {
   gap: 10px;
 }
 
-.relatedPanel a {
+.relatedPanel button {
   display: grid;
   gap: 5px;
   border: 1px solid #e5e7eb;
@@ -907,7 +910,7 @@ button {
   background: #f8fafc;
   color: var(--text);
   padding: 12px;
-  text-decoration: none;
+  text-align: start;
 }
 
 .relatedPanel span {
