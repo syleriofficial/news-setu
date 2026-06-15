@@ -1,4 +1,4 @@
-# NewsSetu
+# Nuzenio
 
 Production-oriented Netlify + Supabase AI news platform.
 

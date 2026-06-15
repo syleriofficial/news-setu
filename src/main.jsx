@@ -116,7 +116,7 @@ const translations = {
     cityArea: 'City / area',
     useLocation: 'Use my location',
     latestStories: 'All Latest Stories',
-    latestIntro: 'Every story shown here is pulled from the live RSS feed. Open any card for the full NewsSetu brief.',
+    latestIntro: 'Every story shown here is pulled from the live RSS feed. Open any card for the full Nuzenio brief.',
     aiBriefReady: 'AI brief ready',
     readStory: 'Read story',
     aiBrief: 'AI Brief',
@@ -126,9 +126,9 @@ const translations = {
     dailyBrief: 'Daily Brief',
     subscribe: 'Subscribe',
     email: 'Email address',
-    newsSetuBrief: 'NewsSetu Brief',
+    brandBrief: 'Nuzenio Brief',
     fullStoryAccess: 'Full story access',
-    fullStoryText: 'NewsSetu shows the complete available RSS brief, AI context, key facts, and attribution here. The full publisher article opens on the original source for copyright-safe reading.',
+    fullStoryText: 'Nuzenio shows the complete available RSS brief, AI context, key facts, and attribution here. The full publisher article opens on the original source for copyright-safe reading.',
     whatHappened: 'What happened',
     whyItMatters: 'Why it matters',
     keyFacts: 'Key facts',
@@ -173,7 +173,7 @@ const translations = {
     cityArea: 'शहर / इलाका',
     useLocation: 'मेरी लोकेशन',
     latestStories: 'ताज़ा खबरें',
-    latestIntro: 'यहां हर खबर लाइव RSS फीड से आती है। पूरी NewsSetu ब्रीफ पढ़ने के लिए कार्ड खोलें।',
+    latestIntro: 'यहां हर खबर लाइव RSS फीड से आती है। पूरी Nuzenio ब्रीफ पढ़ने के लिए कार्ड खोलें।',
     aiBriefReady: 'एआई ब्रीफ तैयार',
     readStory: 'खबर पढ़ें',
     aiBrief: 'एआई ब्रीफ',
@@ -183,9 +183,9 @@ const translations = {
     dailyBrief: 'डेली ब्रीफ',
     subscribe: 'सब्सक्राइब',
     email: 'ईमेल पता',
-    newsSetuBrief: 'NewsSetu ब्रीफ',
+    brandBrief: 'Nuzenio ब्रीफ',
     fullStoryAccess: 'पूरी खबर',
-    fullStoryText: 'NewsSetu यहां उपलब्ध RSS ब्रीफ, एआई संदर्भ, मुख्य तथ्य और स्रोत दिखाता है। पूरी पब्लिशर रिपोर्ट मूल स्रोत पर खुलेगी।',
+    fullStoryText: 'Nuzenio यहां उपलब्ध RSS ब्रीफ, एआई संदर्भ, मुख्य तथ्य और स्रोत दिखाता है। पूरी पब्लिशर रिपोर्ट मूल स्रोत पर खुलेगी।',
     whatHappened: 'क्या हुआ',
     whyItMatters: 'क्यों ज़रूरी है',
     keyFacts: 'मुख्य तथ्य',
@@ -230,7 +230,7 @@ const translations = {
     cityArea: 'المدينة / الحي',
     useLocation: 'استخدم موقعي',
     latestStories: 'آخر الأخبار',
-    latestIntro: 'كل الأخبار هنا تأتي من موجز RSS مباشر. افتح أي بطاقة لقراءة ملخص NewsSetu الكامل.',
+    latestIntro: 'كل الأخبار هنا تأتي من موجز RSS مباشر. افتح أي بطاقة لقراءة ملخص Nuzenio الكامل.',
     aiBriefReady: 'ملخص ذكي جاهز',
     readStory: 'اقرأ الخبر',
     aiBrief: 'ملخص ذكي',
@@ -240,9 +240,9 @@ const translations = {
     dailyBrief: 'الموجز اليومي',
     subscribe: 'اشتراك',
     email: 'البريد الإلكتروني',
-    newsSetuBrief: 'ملخص NewsSetu',
+    brandBrief: 'ملخص Nuzenio',
     fullStoryAccess: 'الوصول للقصة كاملة',
-    fullStoryText: 'يعرض NewsSetu ملخص RSS المتاح والسياق والحقائق والإسناد. يفتح المقال الكامل على موقع الناشر الأصلي.',
+    fullStoryText: 'يعرض Nuzenio ملخص RSS المتاح والسياق والحقائق والإسناد. يفتح المقال الكامل على موقع الناشر الأصلي.',
     whatHappened: 'ماذا حدث',
     whyItMatters: 'لماذا يهم',
     keyFacts: 'حقائق رئيسية',
@@ -297,9 +297,9 @@ const translations = {
     dailyBrief: 'Resumen diario',
     subscribe: 'Suscribirse',
     email: 'Correo electronico',
-    newsSetuBrief: 'Resumen NewsSetu',
+    brandBrief: 'Resumen Nuzenio',
     fullStoryAccess: 'Historia completa',
-    fullStoryText: 'NewsSetu muestra el resumen RSS disponible, contexto, datos clave y atribucion. La historia completa abre en la fuente original.',
+    fullStoryText: 'Nuzenio muestra el resumen RSS disponible, contexto, datos clave y atribucion. La historia completa abre en la fuente original.',
     whatHappened: 'Que paso',
     whyItMatters: 'Por que importa',
     keyFacts: 'Datos clave',
@@ -368,12 +368,12 @@ function initialCategory() {
 function initialLanguage() {
   const urlLanguage = readUrlParam('language');
   const linkedLanguage = languages.find((item) => item.code === urlLanguage);
-  return linkedLanguage || readLocal('newssetu_news_language', languages[0]);
+  return linkedLanguage || readLocal('nuzenio_news_language', languages[0], 'newssetu_news_language');
 }
 
 function initialLocation() {
   const urlCountry = readUrlParam('country');
-  if (!urlCountry) return readLocal('newssetu_location', detectLocaleCountry());
+  if (!urlCountry) return readLocal('nuzenio_location', detectLocaleCountry(), 'newssetu_location');
   const country = normalizeCountry(urlCountry);
   const region = readUrlParam('region') || '';
   const city = readUrlParam('city') || '';
@@ -424,8 +424,8 @@ function App() {
   const [query, setQuery] = useState('');
   const [language, setLanguage] = useState(initialLanguage);
   const [location, setLocation] = useState(initialLocation);
-  const [savedIds, setSavedIds] = useState(() => readLocal('newssetu_saved_ids', []));
-  const [history, setHistory] = useState(() => readLocal('newssetu_history', []));
+  const [savedIds, setSavedIds] = useState(() => readLocal('nuzenio_saved_ids', [], 'newssetu_saved_ids'));
+  const [history, setHistory] = useState(() => readLocal('nuzenio_history', [], 'newssetu_history'));
   const [selected, setSelected] = useState(null);
   const [user, setUser] = useState(null);
   const [authNotice, setAuthNotice] = useState('');
@@ -435,7 +435,7 @@ function App() {
     document.documentElement.dir = language.dir;
     document.documentElement.lang = language.code;
     document.documentElement.dataset.newsLanguage = language.code;
-    writeLocal('newssetu_news_language', language);
+    writeLocal('nuzenio_news_language', language);
   }, [language]);
 
   useEffect(() => {
@@ -529,7 +529,7 @@ function App() {
 
   function updateLocation(next) {
     setLocation(next);
-    writeLocal('newssetu_location', next);
+    writeLocal('nuzenio_location', next);
   }
 
   async function loginWithGoogle() {
@@ -556,7 +556,7 @@ function App() {
     if (data?.length) {
       const ids = data.map((item) => item.article_id);
       setSavedIds(ids);
-      writeLocal('newssetu_saved_ids', ids);
+      writeLocal('nuzenio_saved_ids', ids);
     }
   }
 
@@ -564,7 +564,7 @@ function App() {
     const exists = savedIds.includes(article.id);
     const next = exists ? savedIds.filter((id) => id !== article.id) : [article.id, ...savedIds];
     setSavedIds(next);
-    writeLocal('newssetu_saved_ids', next);
+    writeLocal('nuzenio_saved_ids', next);
 
     if (!supabase || !user) return;
     if (exists) {
@@ -595,7 +595,7 @@ function App() {
     };
     const next = [entry, ...history.filter((item) => item.id !== article.id)].slice(0, 30);
     setHistory(next);
-    writeLocal('newssetu_history', next);
+    writeLocal('nuzenio_history', next);
     if (supabase && user) {
       await supabase.from('reading_history').insert({
         user_id: user.id,
@@ -721,12 +721,10 @@ function Header({
   return (
     <header className="header">
       <div className="topbar">
-        <button className="brand" onClick={() => setScreen('home')} aria-label="NewsSetu home">
+        <button className="brand" onClick={() => setScreen('home')} aria-label="Nuzenio home">
           <div className="logo">N</div>
           <div>
-            <h1>
-              News<span>Setu</span>
-            </h1>
+            <h1>Nuzenio</h1>
             <small>{copy.tagline}</small>
           </div>
         </button>
@@ -911,7 +909,7 @@ function Home({
 
 function RevenueStrip() {
   return (
-    <section className="revenueStrip" aria-label="NewsSetu revenue and trust model">
+    <section className="revenueStrip" aria-label="Nuzenio revenue and trust model">
       <div>
         <b>Live RSS</b>
         <span>Publisher sourced</span>
@@ -1166,7 +1164,7 @@ function ArticleModal({ article, articles, copy, onClose, openArticle, savedIds,
         </div>
         <div className="summaryPanel">
           <h3>
-            <Sparkles size={18} /> {copy.newsSetuBrief}
+            <Sparkles size={18} /> {copy.brandBrief}
           </h3>
           <p>{displayFullBrief(article)}</p>
         </div>
@@ -1234,7 +1232,7 @@ function ArticleModal({ article, articles, copy, onClose, openArticle, savedIds,
         <div className="sourceBox">
           <h3>{copy.sourceAttribution}</h3>
           <p>
-            This story is sourced from <b>{article.source}</b> via live RSS. NewsSetu links back to the original
+            This story is sourced from <b>{article.source}</b> via live RSS. Nuzenio links back to the original
             publisher for the full report.
           </p>
         </div>
@@ -1242,7 +1240,7 @@ function ArticleModal({ article, articles, copy, onClose, openArticle, savedIds,
         <div className="sourceBox affiliateDisclosureBox">
           <h3>Affiliate disclosure</h3>
           <p>
-            NewsSetu keeps editorial RSS stories separate from commercial placements. Any paid or affiliate link must be
+            Nuzenio keeps editorial RSS stories separate from commercial placements. Any paid or affiliate link must be
             labeled before publication.
           </p>
         </div>
@@ -1523,7 +1521,7 @@ function MobileNav({ copy, setScreen, setMobileSearchOpen }) {
 function Footer({ copy }) {
   return (
     <footer className="footer">
-      <b>NewsSetu</b>
+      <b>Nuzenio</b>
       <a href="/privacy.html">Privacy</a>
       <a href="/terms.html">Terms</a>
       <a href="/affiliate-disclosure.html">Affiliate Disclosure</a>
@@ -1572,7 +1570,7 @@ function buildTimeline(article) {
     },
     {
       label: 'Now',
-      text: 'NewsSetu is tracking the live RSS update and summarizing the available brief.',
+      text: 'Nuzenio is tracking the live RSS update and summarizing the available brief.',
     },
     {
       label: 'Next',
@@ -1583,22 +1581,22 @@ function buildTimeline(article) {
 
 function buildBackground(article) {
   const category = article.category === 'local' ? 'local public-interest' : article.category || 'news';
-  return `This is a ${category} story from ${article.source || 'a verified RSS source'}. NewsSetu adds context, key facts, and a safe path to the original report so readers can understand the story quickly without losing source attribution.`;
+  return `This is a ${category} story from ${article.source || 'a verified RSS source'}. Nuzenio adds context, key facts, and a safe path to the original report so readers can understand the story quickly without losing source attribution.`;
 }
 
 function buildFaq(article) {
   return [
     {
       q: 'Is this the full publisher article?',
-      a: 'NewsSetu shows the full available RSS brief and context. The complete publisher article opens through the original source link.',
+      a: 'Nuzenio shows the full available RSS brief and context. The complete publisher article opens through the original source link.',
     },
     {
       q: 'Why not copy the full article here?',
-      a: 'Copying full publisher articles without a license can create copyright and monetization problems. NewsSetu keeps attribution clear and links readers to the source.',
+      a: 'Copying full publisher articles without a license can create copyright and monetization problems. Nuzenio keeps attribution clear and links readers to the source.',
     },
     {
       q: 'Can I get news in another language?',
-      a: 'Use the News language selector in the header. NewsSetu reloads the RSS feed in the selected language when the source supports it.',
+      a: 'Use the News language selector in the header. Nuzenio reloads the RSS feed in the selected language when the source supports it.',
     },
   ];
 }
@@ -1715,9 +1713,10 @@ function formatDate(value) {
   return date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
 }
 
-function readLocal(key, fallback) {
+function readLocal(key, fallback, legacyKey = '') {
   try {
-    return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+    const value = localStorage.getItem(key) || (legacyKey ? localStorage.getItem(legacyKey) : '');
+    return JSON.parse(value || JSON.stringify(fallback));
   } catch {
     return fallback;
   }
@@ -1752,12 +1751,12 @@ function setCanonical(url) {
 }
 
 function setJsonLd(article, url) {
-  const existing = document.getElementById('newssetu-jsonld');
+  const existing = document.getElementById('nuzenio-jsonld');
   if (existing) existing.remove();
   if (!article) return;
 
   const script = document.createElement('script');
-  script.id = 'newssetu-jsonld';
+  script.id = 'nuzenio-jsonld';
   script.type = 'application/ld+json';
   script.textContent = JSON.stringify({
     '@context': 'https://schema.org',
@@ -1769,8 +1768,8 @@ function setJsonLd(article, url) {
     mainEntityOfPage: url,
     publisher: {
       '@type': 'Organization',
-      name: 'NewsSetu',
-      url: 'https://newssetu.netlify.app/',
+      name: 'Nuzenio',
+      url: 'https://nuzenio.com/',
     },
     isBasedOn: article.link,
     citation: article.source,
@@ -1780,10 +1779,10 @@ function setJsonLd(article, url) {
 
 function updatePageSeo(article, context) {
   const url = article ? articleContextUrl(article, context) : homeContextUrl(context);
-  const title = article ? `${displayTitle(article)} | NewsSetu` : 'NewsSetu - Trusted News, Simplified';
+  const title = article ? `${displayTitle(article)} | Nuzenio` : 'Nuzenio - Trusted News, Simplified';
   const description = article
     ? displaySummary(article)
-    : 'NewsSetu is an AI-powered multilingual news platform with trusted sources, summaries, saved articles and global news coverage.';
+    : 'Nuzenio is an AI-powered multilingual news platform with trusted sources, summaries, saved articles and global news coverage.';
 
   document.title = title;
   setCanonical(url.toString());

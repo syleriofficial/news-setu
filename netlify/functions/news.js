@@ -50,7 +50,7 @@ function fetchText(url, redirects = 0) {
         timeout: 9000,
         headers: {
           Accept: 'application/rss+xml, application/xml, text/xml',
-          'User-Agent': 'NewsSetu/1.0 (+https://newssetu.netlify.app)',
+          'User-Agent': 'Nuzenio/1.0 (+https://nuzenio.com)',
         },
       },
       (response) => {

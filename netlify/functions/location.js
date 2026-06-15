@@ -32,7 +32,7 @@ const headers = {
 
 function fetchJson(url, redirects = 0) {
   return new Promise((resolve, reject) => {
-    const request = https.get(url, { timeout: 7000, headers: { 'User-Agent': 'NewsSetu/1.0' } }, (response) => {
+    const request = https.get(url, { timeout: 7000, headers: { 'User-Agent': 'Nuzenio/1.0' } }, (response) => {
       if ([301, 302, 303, 307, 308].includes(response.statusCode) && response.headers.location) {
         response.resume();
         if (redirects > 2) {

@@ -74,7 +74,7 @@ create table if not exists public.affiliate_links (
   title text not null,
   category text not null,
   destination_url text not null,
-  disclosure text default 'NewsSetu may earn a commission from this link.',
+  disclosure text default 'Nuzenio may earn a commission from this link.',
   enabled boolean default false,
   approved_by uuid references auth.users(id) on delete set null,
   created_at timestamptz default now(),
